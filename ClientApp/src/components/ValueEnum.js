@@ -15,9 +15,9 @@ export const Value= {
     ACE: 14
 };
 // Enum of all suits of cards
-export const Suit = {
-    CLUBS: "clubs",
-    DIAMONDS: "diamonds",
-    HEARTS: "hearts",
-    SPADES: "spades"
+export const Suit= {
+    CLUBS: 0,
+    DIAMONDS: 1,
+    HEARTS: 2,
+    SPADES: 3
 };
