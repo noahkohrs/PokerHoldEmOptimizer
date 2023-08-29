@@ -10,7 +10,7 @@ export class WinamaxCalc extends Component {
     this.state = {
       myHand: new MyHand(),
       evaluation: "AAAAAA",
-      stats : new StatsHolder(),
+      stats: new StatsHolder(),
     };
   }
   resetHand() {
@@ -25,31 +25,33 @@ export class WinamaxCalc extends Component {
   }
 
   async EvaluateCards() {
-    const apiUrl = 'http://localhost:5246/api/poker/evaluate';  // URL mise à jour avec le bon port
+    const apiUrl = "http://localhost:5246/api/poker/evaluate"; // URL mise à jour avec le bon port
     const cardData = {
-      Card1:this.state.myHand.card1,
-      Card2:this.state.myHand.card2,
+      Card1: this.state.myHand.card1,
+      Card2: this.state.myHand.card2,
     };
     console.log(cardData);
-    this.setState({ evaluation: "Loading..." });
+    this.setState({ 
+      evaluation: "Loading...",
+      stats: new StatsHolder(true),
+     });
     const response = await fetch(apiUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(cardData),
     });
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      this.setState({ 
+      this.setState({
         evaluation: data.score,
-        stats : data, 
+        stats: data,
       });
     } else {
       this.setState({ evaluation: "Error" });
     }
-
   }
 
   addCard(card) {
@@ -62,13 +64,17 @@ export class WinamaxCalc extends Component {
     // Reload the page
   }
   toPercent(number) {
-   const  n = (number/this.state.stats.numberOfHands)*100;
+    if (number === "Calculating...") {
+      return number;
+    } else if (number === "Waiting for cards...") {
+      return number;
+    }
+    const n = (number / this.state.stats.numberOfHands) * 100;
     if (n < 0.01) {
       return n.toFixed(4) + "%";
     } else if (n < 0.1) {
       return n.toFixed(3) + "%";
-    }
-    else {
+    } else {
       return n.toFixed(2) + "%";
     }
   }
@@ -77,43 +83,89 @@ export class WinamaxCalc extends Component {
     return (
       <div>
         <h1>WinamaxCalc</h1>
-        {/* Button that is also the image at  assets\cards\2_of_clubs.png with a small relative size*/}
-        <Hand choosenHand={this.state.myHand}></Hand>
-        {/* Button that call the reset function of the Hand */}
-        <button
-          type="button"
-          class="btn"
-          onClick={() => this.resetHand()}
-          id="resetButton"
+
+        {/* Flex container */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          {" "}
-          Reset{" "}
-        </button>
-        <p>{this.state.evaluation}</p>
-        <p>Paire : {this.toPercent(this.state.stats.pair)}</p>
-        <p>Double pair : {this.toPercent(this.state.stats.doublePair)}</p>
-        <p>Brelan : {this.toPercent(this.state.stats.brelan)}</p>
-        <p>Suite : {this.toPercent(this.state.stats.straight)}</p>
-        <p>Couleur : {this.toPercent(this.state.stats.flush)}</p>
-        <p>Full : {this.toPercent(this.state.stats.full)}</p>
-        <p>Carré : {this.toPercent(this.state.stats.carre)}</p>
-        <p>Quinte flush : {this.toPercent(this.state.stats.quinteFlush)}</p>
-        <p>Quinte flush royale : {this.toPercent(this.state.stats.quinteFlushRoyale)}</p>
-        <p>Total : {this.state.stats.numberOfHands}</p>
+          {/* Left side: Hand and reset button */}
+          <div>
+            <Hand choosenHand={this.state.myHand}></Hand>
+            <button
+              type="button"
+              class="btn"
+              onClick={() => this.resetHand()}
+              id="resetButton"
+            >
+              Reset
+            </button>
+          </div>
+
+          {/* Right side: Stats */}
+          <div>
+            <p>Score : {this.state.evaluation}</p>
+            <p>Paire : {this.toPercent(this.state.stats.pair)}</p>
+            <p>Double pair : {this.toPercent(this.state.stats.doublePair)}</p>
+            <p>Brelan : {this.toPercent(this.state.stats.brelan)}</p>
+            <p>Suite : {this.toPercent(this.state.stats.straight)}</p>
+          </div>
+          <div>
+            <p>Couleur : {this.toPercent(this.state.stats.flush)}</p>
+            <p>Full : {this.toPercent(this.state.stats.full)}</p>
+            <p>Carré : {this.toPercent(this.state.stats.carre)}</p>
+            <p>Quinte flush : {this.toPercent(this.state.stats.quinteFlush)}</p>
+            <p>
+              Quinte flush royale :{" "}
+              {this.toPercent(this.state.stats.quinteFlushRoyale)}
+            </p>
+          </div>
+        </div>
+
+        {/* CardChooser */}
         <CardChooser onCardClick={(card) => this.addCard(card)}></CardChooser>
       </div>
     );
   }
 }
 class StatsHolder {
-  pair = 0;
-  doublePair = 0;
-  brelan = 0;
-  straight = 0;
-  flush = 0;
-  full = 0;
-  carre = 0;
-  quinteFlush = 0;
-  quinteFlushRoyale = 0;
-  numberOfHands = 0;
+  pair = "Calculating...";
+  doublePair = "Calculating...";
+  brelan = "Calculating...";
+  straight = "Calculating...";
+  flush = "Calculating...";
+  full = "Calculating...";
+  carre = "Calculating...";
+  quinteFlush = "Calculating...";
+  quinteFlushRoyale = "Calculating...";
+  numberOfHands = "Calculating...";
+  constructor (cardSelected) {
+    if (cardSelected) {
+      this.pair = "Calculating...";
+      this.doublePair = "Calculating...";
+      this.brelan = "Calculating...";
+      this.straight = "Calculating...";
+      this.flush = "Calculating...";
+      this.full = "Calculating...";
+      this.carre = "Calculating...";
+      this.quinteFlush = "Calculating...";
+      this.quinteFlushRoyale = "Calculating...";
+      this.numberOfHands = "Calculating...";
+    }
+    else {
+      this.pair = "Waiting for cards...";
+      this.doublePair = "Waiting for cards...";
+      this.brelan = "Waiting for cards...";
+      this.straight = "Waiting for cards...";
+      this.flush = "Waiting for cards...";
+      this.full = "Waiting for cards...";
+      this.carre = "Waiting for cards...";
+      this.quinteFlush = "Waiting for cards...";
+      this.quinteFlushRoyale = "Waiting for cards...";
+      this.numberOfHands = "Waiting for cards...";
+    }
+  }
 }

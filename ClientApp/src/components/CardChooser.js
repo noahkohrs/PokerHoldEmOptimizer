@@ -25,14 +25,7 @@ export class CardChooser extends Component {
   }
 
   handleCardClick(card) {
-    if (this.props.slotsAreFull) {
-      this.setState({ shakingCard: card });
-      setTimeout(() => {
-        this.setState({ shakingCard: null });
-      }, 500);
-    } else {
       this.props.onCardClick(card);
-    }
   }
 
   render() {
@@ -45,6 +38,7 @@ export class CardChooser extends Component {
               onClick={() => this.handleCardClick(card)}
               width="40"
               height="55"
+              class="pointer"
             />
         ))}
         <br />
@@ -55,6 +49,7 @@ export class CardChooser extends Component {
               onClick={() => this.handleCardClick(card)}
               width="40"
               height="55"
+              class= "pointer"
             />
         ))}
         <br />
@@ -65,6 +60,7 @@ export class CardChooser extends Component {
               onClick={() => this.handleCardClick(card)}
               width="40"
               height="55"
+              class = "pointer"
             />
         ))}
         <br />
@@ -75,6 +71,7 @@ export class CardChooser extends Component {
               onClick={() => this.handleCardClick(card)}
               width="40"
               height="55"
+              class="pointer"
             />
         ))}
       </div>
