@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Hand } from "./Hand.js";
-import { MyHand } from "./MyHand.js";
-import { CardChooser } from "./CardChooser.js";
+import { Hand } from "./Hand";
+import { MyHand } from "../models/MyHand";
+import { CardChooser } from "./CardChooser";
 
-export class WinamaxCalc extends Component {
-  static displayName = WinamaxCalc.name;
+export class HoldEmEvaluator extends Component {
+  static displayName = HoldEmEvaluator.name;
   constructor(props) {
     super(props);
     this.state = {
@@ -82,7 +82,7 @@ export class WinamaxCalc extends Component {
   render() {
     return (
       <div>
-        <h1>WinamaxCalc</h1>
+        <h1>HoldEmEvaluator</h1>
 
         {/* Flex container */}
         <div

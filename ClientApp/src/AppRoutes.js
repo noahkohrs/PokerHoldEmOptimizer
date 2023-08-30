@@ -1,11 +1,9 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
-import { WinamaxCalc } from "./components/WinamaxCalc";
+import { HoldEmEvaluator } from "./components/HoldEmEvaluator";
 
 const AppRoutes = [
   {
     index: true,
-    element: <WinamaxCalc />
+    element: <HoldEmEvaluator />
   },
 ];
 
