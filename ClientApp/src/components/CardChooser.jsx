@@ -23,7 +23,52 @@ export class CardChooser extends Component {
   }
 
   handleCardClick(card) {
+    if (this.cardCanBeChosen(card)) {
       this.props.onCardClick(card);
+    } else {
+      this.giggleCard(card);
+    }
+  }
+
+  giggleCard(card) {
+    var suit = '';
+    switch (card.suit) {
+      case Suit.CLUBS:
+        suit = 'clubs';
+        break;
+      case Suit.DIAMONDS:
+        suit = 'diamonds';
+        break;
+      case Suit.HEARTS:
+        suit = 'hearts';
+        break;
+      case Suit.SPADES:
+        suit = 'spades';
+        break;
+      default:
+        return;
+    }
+    const index = this.state[suit].findIndex(c => c.equals(card));  // Assuming you have an 'equals' method in Card.
+
+    if (index !== -1) {
+      let updatedSuit = [...this.state[suit]];
+      updatedSuit[index].giggle = true;
+      this.setState({ [suit]: updatedSuit });
+
+      // Remove the giggle animation after a certain time
+      setTimeout(() => {
+        updatedSuit[index].giggle = false;
+        this.setState({ [suit]: updatedSuit });
+      }, 1000);  // assuming the animation lasts 1 second.
+    }
+  }
+
+  cardCanBeChosen(card) {
+    // Remarque: cette fonction doit être mise à jour en fonction de la logique de votre jeu.
+    // Pour cet exemple, je suppose que vous ne pouvez pas choisir une carte déjà présente dans MyHand.
+    const myHand = this.props.myHand  // You would typically get this from your props or state.
+    console.log(myHand);
+    return !myHand.contains(card) && !myHand.isFull();  // Assuming you have a method 'contains' in MyHand.
   }
 
   renderASuit(suit) {
@@ -36,7 +81,7 @@ export class CardChooser extends Component {
               onClick={() => this.handleCardClick(card)}
               width="40"
               height="55"
-              class="pointer"
+              className={`pointer ${card.giggle ? 'wiggle-effect' : ''}`}
             />
         ))}
         <br />

@@ -126,7 +126,7 @@ export class HoldEmEvaluator extends Component {
         </div>
 
         {/* CardChooser */}
-        <CardChooser onCardClick={(card) => this.addCard(card)}></CardChooser>
+        <CardChooser myHand={this.state.myHand} onCardClick={(card) => this.addCard(card)}></CardChooser>
       </div>
     );
   }

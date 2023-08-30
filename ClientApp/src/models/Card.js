@@ -52,4 +52,8 @@ export class Card {
   getImage() {
     return this.imageRef;
   }
+
+  equals(card) {
+    return this.suit === card.suit && this.value === card.value;
+  }
 }
